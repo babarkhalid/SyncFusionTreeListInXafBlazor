@@ -1,0 +1,74 @@
+﻿@page "/issuetreelistview"
+@using DevExpress.ExpressApp
+@using DevExpress.ExpressApp.Blazor.Services
+@using SyncFusionTreeListInXafBlazor.Module.BusinessObjects
+@using Syncfusion.Blazor.Grids
+@inject IXafApplicationProvider XafApplicationProvider
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+<SfTreeGrid DataSource="@TreeData" IdMapping="IssueId" ParentIdMapping="ParentId" TreeColumnIndex="1">
+    <TreeGridPageSettings PageSizeMode="PageSizeMode.Root" PageSize="2"></TreeGridPageSettings>
+    <TreeGridEvents OnRecordDoubleClick="RecordDoubleClickHandler" TValue="BusinessObject"></TreeGridEvents>
+    @*<TreeGridEvents  RowSelected="RowSelectedHandler" TValue="BusinessObject"></TreeGridEvents>
+    <TreeGridEvents RowDeselected="RowDeselectedHandler" TValue="BusinessObject"></TreeGridEvents>*@
+
+    <TreeGridColumns>
+        <TreeGridColumn Field="IssueId" HeaderText="Issue ID" Width="5" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left" Visible=false></TreeGridColumn>
+        <TreeGridColumn Field="IssueName" HeaderText="Issue" Width="30" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"></TreeGridColumn>
+        <TreeGridColumn Field="Description" HeaderText="Description" Width="30" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Left"></TreeGridColumn>
+        <TreeGridColumn Field="LogDate" HeaderText="Date" Width="30"></TreeGridColumn>
+    </TreeGridColumns>
+</SfTreeGrid>
+
+
+@code
+{
+    public bool IsRowSelected = false;
+    public class BusinessObject
+    {
+        public Guid IssueId { get; set; }
+        public string IssueName { get; set; }
+        public Guid? ParentId { get; set; }
+        public string Description { get; set; }
+        public DateTime LogDate { get; set; }
+    }
+
+    public List<BusinessObject> TreeData = new List<BusinessObject>();
+
+    protected override void OnInitialized()
+    {
+        var Application = XafApplicationProvider.GetApplication();
+        IObjectSpace os = Application.CreateObjectSpace(typeof(Issue));
+        var data = os.GetObjects<Issue>();
+
+        foreach(var item in data)
+        {
+            TreeData.Add(new BusinessObject()
+            {
+                ParentId = item.ParentIssue?.Oid,
+                IssueId = item.Oid,
+                IssueName = item.Name,
+                Description = item.Description,
+                LogDate = item.LogDate
+            });
+        }
+    }
+
+    public void RecordDoubleClickHandler(RecordDoubleClickEventArgs<BusinessObject> args)
+    {
+        BusinessObject issue = (BusinessObject)args.RowData;
+        NavigationManager.NavigateTo($"/Issue_DetailView/{issue.IssueId}");
+    }
+
+    public void RowSelectedHandler(RowSelectEventArgs<BusinessObject> args)
+    {
+        IsRowSelected = true;
+        BusinessObject issue = args.Data;
+    }
+
+    public void RowDeselectedHandler(RowDeselectEventArgs<BusinessObject> args)
+    {
+        IsRowSelected = false;
+    }
+}

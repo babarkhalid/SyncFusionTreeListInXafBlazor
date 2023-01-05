@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <NavigationItems NavigationStyle="Accordion">
+    <Items>
+      <Item Id="Default">
+        <Items>
+          <Item Id="@5db0ef43-f53f-448a-8e20-fa26c4b5ce84" ViewId="IssueTreeListDB" IsNewNode="True" />
+        </Items>
+      </Item>
+    </Items>
+  </NavigationItems>
+  <SchemaModules>
+    <SchemaModule Name="CloneObjectModule" Version="22.2.3.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="22.2.3.0" IsNewNode="True" />
+  </SchemaModules>
+  <Views DefaultListEditor="DevExpress.ExpressApp.Blazor.Editors.DxGridListEditor">
+    <DashboardView Id="IssueTreeListDB" Caption="Issue Tree" IsNewNode="True">
+      <HiddenActions IsNewNode="True">
+        <ActionLink ActionId="OrganizeDashboard" IsNewNode="True" />
+      </HiddenActions>
+      <Items IsNewNode="True">
+        <ControlDetailItem Id="treeListViewIssues" ControlTypeName="SyncFusionTreeListInXafBlazor.Blazor.Server.Pages.IssueTreeListViewAdapter" IsNewNode="True" />
+      </Items>
+      <Layout IsNewNode="True">
+        <LayoutGroup Id="Main" ShowCaption="False" Direction="Vertical" Index="0" RelativeSize="100" Caption="Main" IsNewNode="True">
+          <LayoutItem Id="treeListViewIssues" ViewItem="treeListViewIssues" Index="0" RelativeSize="100" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+    </DashboardView>
+  </Views>
+</Application>
