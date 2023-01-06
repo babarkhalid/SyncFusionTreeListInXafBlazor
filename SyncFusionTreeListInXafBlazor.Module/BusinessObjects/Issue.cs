@@ -20,7 +20,11 @@ namespace SyncFusionTreeListInXafBlazor.Module.BusinessObjects
         public Issue(Session session) : base(session)
         { }
 
-
+        public override void AfterConstruction()
+        {
+            base.AfterConstruction();
+            LogDate = DateTime.Now;
+        }
         private Issue _ParentIssue;
         [Association("Parent-Child")]
         public Issue ParentIssue
@@ -60,6 +64,8 @@ namespace SyncFusionTreeListInXafBlazor.Module.BusinessObjects
             set { SetPropertyValue<DateTime>(nameof(LogDate), ref _LogDate, value); }
         }
 
+        [VisibleInDetailView(false)]
+        [VisibleInListView(false)]
         public Guid? ParentId
         {
             get => ParentIssue?.Oid; 
