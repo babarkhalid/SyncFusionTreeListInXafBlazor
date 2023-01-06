@@ -22,10 +22,18 @@ namespace SyncFusionTreeListInXafBlazor.Module.BusinessObjects
 
 
         private Issue _ParentIssue;
+        [Association("Parent-Child")]
         public Issue ParentIssue
         {
             get { return _ParentIssue; }
             set { SetPropertyValue<Issue>(nameof(ParentIssue), ref _ParentIssue, value); }
+        }
+
+
+        [Association("Parent-Child")]
+        public XPCollection<Issue> ChildrenIssues
+        {
+            get { return GetCollection<Issue>(nameof(ChildrenIssues)); }
         }
 
 
